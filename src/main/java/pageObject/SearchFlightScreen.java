@@ -11,14 +11,19 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class FlightScreen {
+public class SearchFlightScreen {
     public static WebDriver driver;
+    public WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+    public SearchFlightScreen(WebDriver driver) {
+        this.driver = driver;
+    }
+
     By oneWayButton = By.cssSelector("button[label='One-way']");
     By roundTripButton = By.cssSelector("button[label='Round-trip']");
     By flightOriginSearch = By.cssSelector("#flight-origin-search-input");
     By flightDestinationSearch = By.cssSelector("#flight-destination-search-input");
     By flightDeparture = By.cssSelector("#flight-departure");
-    By flightOccupancy = By.cssSelector("#flight-occupancy");
+    static By flightOccupancy = By.cssSelector("#flight-occupancy");
     By addHotelCheckbox = By.cssSelector(".Box-sc-kv6pi1-0.fEqKQn  .Checkboxstyled__CheckboxInput-sc-vp5jkq-0.kOKrHS");
     By directOnlyCheckbox = By.cssSelector(".Box-sc-kv6pi1-0.gNtbSA  .Checkboxstyled__CheckboxSpan-sc-vp5jkq-2.Spanstyled__SpanStyled-sc-16tp9kb-0.bMXWRU.gwICfd.kite-js-Span");
     By searchButton = By.cssSelector(".Box-sc-kv6pi1-0.Buttonstyled__ButtonStyled-sc-5gjk6l-0.fDMIuA.iCZpGI");
@@ -26,9 +31,12 @@ public class FlightScreen {
     By flightOptions = By.cssSelector("ul[role='listbox'] > li[class='Suggestion Suggestion--flight Suggestion__categoryName']");
     By dateSelector = By.cssSelector(".DateSelector__PopupContent");
     static By pickerDays = By.cssSelector(".PriceSurgePicker-Day__label");
-    public FlightScreen(WebDriver driver) {
-        this.driver = driver;
-    }
+    static By flightOccupancyPopup = By.cssSelector("div[role='dialog'] > .Popup__content");
+    static By addAdult = By.cssSelector("button[data-element-name='flight-occupancy-adult-increase']");
+    static By addChildren = By.cssSelector("button[data-element-name='flight-occupancy-children-increase']");
+    static By addInfanct = By.cssSelector("button[data-element-name='flight-occupancy-infant-increase']");
+    By  searchFlyButton = By.cssSelector("button[data-selenium='searchButton']");
+
     public WebElement getOneWayButton() {
         return driver.findElement(oneWayButton);
     }
@@ -44,7 +52,7 @@ public class FlightScreen {
     public WebElement getFlightDeparture() {
         return driver.findElement(flightDeparture);
     }
-    public WebElement getFlightOccupancy() {
+    public static WebElement getFlightOccupancy() {
         return driver.findElement(flightOccupancy);
     }
     public WebElement getAddHotelCheckbox() {
@@ -68,21 +76,37 @@ public class FlightScreen {
     public static List<WebElement> getPickerDays() {
         return driver.findElements(pickerDays);
     }
+    public static WebElement getFlightOccupancyPopup() {
+        return driver.findElement(flightOccupancyPopup);
+    }
+    public static WebElement getAddAdult(){
+        return driver.findElement(addAdult);
+    }
+    public static WebElement getAddChildren(){
+        return driver.findElement(addChildren);
+    }
+    public static WebElement getAddInfant(){
+        return driver.findElement(addInfanct);
+    }
+    public WebElement getSearchFlyButton() {
+        return driver.findElement(searchFlyButton);
+    }
+
     public void clickOnOneWayButton() {
-        if (getOneWayButton().isSelected() == false) {
+        if (!getOneWayButton().isSelected()) {
             getOneWayButton().click();
         }
     }
     public void clickOnRoundTripButton() {
-        if (getRoundTripButton().isSelected() == false) {
+        if (!getRoundTripButton().isSelected()) {
             getRoundTripButton().click();
         }
     }
     public void selectFlightOrigin(String searchKeyword, String origin) {
         boolean found = false;
         getFlightOriginSearch().sendKeys(searchKeyword);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30)); // Adjust the timeout as needed
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("ul[role='listbox']")));
+
+        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("ul[role='listbox']")));
         while (!found) {
             List<WebElement> flighOriginOptions = getFlightOptions(); // Lấy lại danh sách mỗi lần
             for (WebElement flightOption : flighOriginOptions) {
@@ -99,8 +123,8 @@ public class FlightScreen {
     public void selectFlightDestination(String searchKeyword, String destination) {
         boolean found = false;
         getFlightDestinationSearch().sendKeys(searchKeyword);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30)); // Adjust the timeout as needed
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("ul[role='listbox']")));
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30)); // Adjust the timeout as needed
+//        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("ul[role='listbox']")));
         while (!found) {
             List<WebElement> flighOriginOptions = getFlightOptions(); // Lấy lại danh sách mỗi lần
             for (WebElement flightOption : flighOriginOptions) {
@@ -138,5 +162,38 @@ public class FlightScreen {
                 }
             }
         }
+    }
+    private static void selectAdultOccupancy(int numberOfAdults) {
+        if (getFlightOccupancyPopup().isDisplayed() == false) {
+            getFlightOccupancy().click();
+        }
+        for (int i = 1; i < numberOfAdults; i++){
+            getAddAdult().click();
+        }
+    }
+    private static void selectChildrenOccupancy(int numberOfChildren) {
+        if (getFlightOccupancyPopup().isDisplayed() == false) {
+            getFlightOccupancy().click();
+        }
+        for (int i = 1; i <= numberOfChildren; i++){
+            getAddChildren().click();
+        }
+    }
+    private static void selectInfantOccupancy(int numberOfInfant) {
+        if (getFlightOccupancyPopup().isDisplayed() == false) {
+            getFlightOccupancy().click();
+        }
+        for (int i = 1; i <= numberOfInfant; i++){
+            getAddInfant().click();
+        }
+    }
+    public void selectOccupancy(int numberOfAdults, int numberOfChildren, int numberOfInfant) {
+        selectAdultOccupancy(numberOfAdults);
+        selectChildrenOccupancy(numberOfChildren);
+        selectInfantOccupancy(numberOfInfant);
+    }
+
+    public void clickSearchFlightButton() {
+        getSearchFlyButton().click();
     }
 }

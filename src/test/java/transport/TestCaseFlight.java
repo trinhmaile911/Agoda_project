@@ -40,5 +40,6 @@ public class TestCaseFlight extends BasePage {
         searchFlightScreen.selectOccupancy(1, 1, 1);
         searchFlightScreen.clickSearchFlightButton();
         agodaFlightScreen.expandCollapseAirlines();
+
     }
 }

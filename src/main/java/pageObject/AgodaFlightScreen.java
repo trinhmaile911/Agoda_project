@@ -17,12 +17,13 @@ public class AgodaFlightScreen {
 
     By expandCollapseAirlinesButton = By.cssSelector("button[role='button']");
 
-    public WebElement getExpandCollapseAirlinesButton() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(expandCollapseAirlinesButton));
+    public WebElement getExpandCollapseAirlinesButton() throws InterruptedException {
+        //Thread.sleep(4000);
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("div[data-component='flight-card']")));
         return driver.findElement(expandCollapseAirlinesButton);
     }
 
-    public void expandCollapseAirlines() {
+    public void expandCollapseAirlines() throws InterruptedException {
         wait.until(ExpectedConditions.visibilityOf(getExpandCollapseAirlinesButton()));
         getExpandCollapseAirlinesButton().click();
     }

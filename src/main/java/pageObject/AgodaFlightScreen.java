@@ -15,16 +15,13 @@ public class AgodaFlightScreen {
         this.driver = driver;
     }
 
-    By expandCollapseAirlinesButton = By.cssSelector(".ab9a8-self-center .ab9a8-bg-base-transparent");
+    By expandCollapseAirlinesButton = By.cssSelector("button[role='button']");
 
-    public WebElement getExpandCollapseAirlinesButton() throws InterruptedException {
-        //Thread.sleep(4000);
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".ab9a8-self-center .ab9a8-bg-base-transparent")));
+    public WebElement getExpandCollapseAirlinesButton() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(expandCollapseAirlinesButton));
         return driver.findElement(expandCollapseAirlinesButton);
     }
-
-    public void expandCollapseAirlines() throws InterruptedException {
-        wait.until(ExpectedConditions.visibilityOf(getExpandCollapseAirlinesButton()));
+    public void expandCollapseAirlines() {
         getExpandCollapseAirlinesButton().click();
     }
 }

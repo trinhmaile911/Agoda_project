@@ -123,15 +123,13 @@ public class SearchFlightScreen {
     public void selectFlightDestination(String searchKeyword, String destination) {
         boolean found = false;
         getFlightDestinationSearch().sendKeys(searchKeyword);
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30)); // Adjust the timeout as needed
-//        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("ul[role='listbox']")));
         while (!found) {
-            List<WebElement> flighOriginOptions = getFlightOptions(); // Lấy lại danh sách mỗi lần
+            List<WebElement> flighOriginOptions = getFlightOptions();
             for (WebElement flightOption : flighOriginOptions) {
-                if (flightOption.isDisplayed()) { // Kiểm tra xem phần tử có hiển thị không
+                if (flightOption.isDisplayed()) {
                     if (flightOption.getText().contains(destination)) {
                         flightOption.click();
-                        found = true; // Đặt flag để thoát khỏi vòng lặp
+                        found = true;
                         break;
                     }
                 }

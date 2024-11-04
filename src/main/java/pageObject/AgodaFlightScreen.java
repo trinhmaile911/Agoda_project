@@ -1,8 +1,10 @@
 package pageObject;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -19,7 +21,8 @@ public class AgodaFlightScreen {
 
     By expandCollapseAirlinesButton = By.cssSelector("button[role='button']");
     By selectAllAirlinesToggle = By.cssSelector("label[data-element-name='flight-filter-airline-toggle']");
-    By airlines = By.cssSelector("label[data-element-name='flight-filter-airline-item']");
+    By airlineList = By.cssSelector("label[data-element-name='flight-filter-airline-item']");
+    By stopList = By.cssSelector("label[data-element-name='flight-filter-stops-item']");
 
     public WebElement getExpandCollapseAirlinesButton()  {
         wait.until(ExpectedConditions.visibilityOfElementLocated(expandCollapseAirlinesButton));
@@ -29,8 +32,11 @@ public class AgodaFlightScreen {
         wait.until(ExpectedConditions.visibilityOfElementLocated(selectAllAirlinesToggle));
         return driver.findElement(selectAllAirlinesToggle);
     }
-    public List<WebElement> getAirlines() {
-        return driver.findElements(airlines);
+    public List<WebElement> getAirlineList() {
+        return driver.findElements(airlineList);
+    }
+    public List<WebElement> getStopList() {
+        return driver.findElements(stopList);
     }
 
     public void expandCollapseAirlines() {
@@ -41,12 +47,29 @@ public class AgodaFlightScreen {
             getSelectAllAirlinesToggle().click();
         }
     }
-    public void selectAirlines(String airlineName) {
-        List<WebElement> airlines = getAirlines();
-        for (WebElement airline : airlines) {
-            if (airline.getAttribute("data-element-value").equals(airline)) {
-                airline.click();
-                System.out.println("Selected Airline : " + airline.getAttribute("data-element-value"));
+    public void selectAirlines(String... airlineNames) {
+        List<WebElement> airlines = getAirlineList();
+        wait.until(ExpectedConditions.visibilityOfAllElements(airlines));
+        for (String airlineName : airlineNames){
+            for (WebElement airline : airlines) {
+                if (airline.getAttribute("data-element-value").equals(airlineName)) {
+                    airline.click();
+                    break;
+                }
+            }
+        }
+    }
+    public void selectStops(String... stopNames) {
+        List<WebElement> stops = getStopList();
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        wait.until(ExpectedConditions.visibilityOfAllElements(stops));
+        js.executeScript("arguments[0].scrollIntoView(true);", getExpandCollapseAirlinesButton());
+        for (String stopName : stopNames){
+            for (WebElement stop : stops) {
+                if (stop.getAttribute("data-element-value").equals(stopName)) {
+                    stop.click();
+                    break;
+                }
             }
         }
     }

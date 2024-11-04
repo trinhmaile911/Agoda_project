@@ -40,6 +40,8 @@ public class TestCaseFlight extends BasePage {
         searchFlightScreen.selectOccupancy(1, 1, 1);
         searchFlightScreen.clickSearchFlightButton();
         agodaFlightScreen.expandCollapseAirlines();
-        agodaFlightScreen.selectAirlines("Aer Lingus");
+        agodaFlightScreen.selectAirlines("Aer Lingus", "Air France", "Air Canada");
+        agodaFlightScreen.selectStops("1 Stop", "2 Stops+", "Direct");
+
     }
 }
